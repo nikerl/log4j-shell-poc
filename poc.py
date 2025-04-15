@@ -107,6 +107,9 @@ def main() -> None:
             raise SystemExit(1)
         payload(args.userip, args.webport, args.lport, args.payload)
     except KeyboardInterrupt:
+        # Cleanup
+        os.remove("Exploit.java")
+        os.remove("Exploit.class")
         print(Fore.RED + "user interrupted the program.")
         raise SystemExit(0)
 
