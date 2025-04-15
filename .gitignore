@@ -1,2 +1,4 @@
 jdk1.8.0_20/
 Exploit.*
+/venv
+.directory
